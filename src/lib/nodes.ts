@@ -1,8 +1,8 @@
-export const nodes = [
-	{
+export const nodes =
+	[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0].map((i) => ({
 		name: 'rutherford',
 		isDown: false,
-		uptime: 75.76,
+		uptime: 80.21 + (i + 10),
 		fuckUps: [
 			{
 				date: 1689839351,
@@ -18,5 +18,5 @@ export const nodes = [
 			}
 		],
 		monitoringSince: 1689738551
-	}
-];
+	}))
+;

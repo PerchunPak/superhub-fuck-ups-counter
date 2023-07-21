@@ -3,7 +3,7 @@
 	import { firstCapital, formatUnixTimestamp } from '$lib/utils';
 </script>
 
-<div class="text-center pt-20">
+<div class="grid place-items-center pt-20 text-center">
 	<h1 class="text-5xl font-black">
 		<a
 			href="https://superhub.host"
@@ -12,15 +12,15 @@
 			Superhub</a
 		>'s fuck-ups counter
 	</h1>
-	<p class="pt-5 text-xl">
+	<p class="pt-5 text-xl max-w-xl">
 		We count how many days passed after any of the nodes downtime (so you can know which is the
 		stablest one).
 	</p>
 </div>
 
-<div class="pt-10">
+<div class="pt-10 max-w-5xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 	{#each nodes as node}
-		<div class="bg-secondary rounded-md mb-4 px-4 py-5 w-full relative">
+		<div class="bg-secondary rounded-md px-4 py-5 w-full relative">
 			<h3 class="font-extrabold">{firstCapital(node.name)}</h3>
 			<p>Count of fuck-ups: <span class="font-bold">{node.fuckUps.length}</span>.</p>
 			<p>
