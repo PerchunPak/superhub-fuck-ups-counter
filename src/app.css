@@ -4,9 +4,9 @@
 @tailwind utilities;
 
 * {
-    --color-text: #E6E6E6;
-    --color-background: #1B1D26;
-    --color-primary: #E6E6E6;
-    --color-secondary: #282A31;
-    --color-accent: #d612c3;
+	--color-text: #e6e6e6;
+	--color-background: #1b1d26;
+	--color-primary: #e6e6e6;
+	--color-secondary: #282a31;
+	--color-accent: #d612c3;
 }

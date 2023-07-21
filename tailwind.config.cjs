@@ -9,11 +9,11 @@ const config = {
 	theme: {
 		extend: {
 			colors: {
-				"color-text": "var(--color-text)",
-				"color-background": "var(--color-background)",
-				primary: "var(--color-primary)",
-				secondary: "var(--color-secondary)",
-				accent: "var(--color-accent)",
+				'color-text': 'var(--color-text)',
+				'color-background': 'var(--color-background)',
+				primary: 'var(--color-primary)',
+				secondary: 'var(--color-secondary)',
+				accent: 'var(--color-accent)'
 			}
 		}
 	},
