@@ -2,3 +2,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    --color-text: #E6E6E6;
+    --color-background: #1B1D26;
+    --color-primary: #E6E6E6;
+    --color-secondary: #282A31;
+    --color-accent: #d612c3;
+}

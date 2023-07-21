@@ -7,7 +7,15 @@ const config = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				"color-text": "var(--color-text)",
+				"color-background": "var(--color-background)",
+				primary: "var(--color-primary)",
+				secondary: "var(--color-secondary)",
+				accent: "var(--color-accent)",
+			}
+		}
 	},
 
 	plugins: [forms, typography, daisyui]
