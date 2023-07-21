@@ -1,2 +1,14 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import { _, locale, locales } from 'svelte-i18n';
+</script>
+
+<div>
+	{$_('my.translation.key')}
+</div>
+<div class="pt-1">
+	<select bind:value={$locale}>
+		{#each $locales as locale}
+			<option value={locale}>{locale}</option>
+		{/each}
+	</select>
+</div>
