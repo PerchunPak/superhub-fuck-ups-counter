@@ -7,6 +7,12 @@
 	--color-text: #e6e6e6;
 	--color-background: #1b1d26;
 	--color-primary: #e6e6e6;
-	--color-secondary: #282a31;
+	--color-secondary: #282a30;
 	--color-accent: #d612c3;
+	--color-border-uptime-good: #78ff78;
+	--color-border-uptime-average: #ffff78;
+	--color-border-uptime-bad: #ff7878;
+	--color-bg-uptime-good: rgba(120, 255, 120, 0.2);
+	--color-bg-uptime-average: rgba(255, 255, 120, 0.2);
+	--color-bg-uptime-bad: hsla(0, 100%, 74%, 0.2);
 }

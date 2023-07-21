@@ -5,7 +5,7 @@ We count how many days passed after any of the nodes downtime (so you can know w
 ## Todo
 
 - [x] Add header and description on the main page.
-- [ ] Add one example node.
+- [x] Add one example node.
 - [ ] Support many nodes.
 - [ ] Write backend.
   - [ ] Look for Kuma's API.
