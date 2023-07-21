@@ -4,7 +4,7 @@ We count how many days passed after any of the nodes downtime (so you can know w
 
 ## Todo
 
-- [ ] Add header and description on the main site.
+- [x] Add header and description on the main page.
 - [ ] Add one example node.
 - [ ] Support many nodes.
 - [ ] Write backend.
