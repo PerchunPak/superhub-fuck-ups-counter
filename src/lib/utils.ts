@@ -2,7 +2,7 @@ import { formatDistance } from 'date-fns';
 import type { NodeFuckUp } from '$lib/server/fetch-data/interfaces';
 import { locale as localeStore } from 'svelte-i18n';
 import { get } from 'svelte/store';
-import { enUS, ru, uk } from 'date-fns/locale';
+import { enUS, ru, uk } from 'date-fns/locale/index';
 
 export function firstCapital(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
