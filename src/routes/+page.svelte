@@ -20,8 +20,7 @@
 		>'s fuck-ups counter
 	</h1>
 	<p class="pt-5 text-xl max-w-xl">
-		We count how many days passed after any of the nodes downtime (so you can know which is the
-		stablest one).
+		We basically track the stability of their nodes, so you can know which is the stablest one.
 	</p>
 </div>
 
