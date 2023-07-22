@@ -5,19 +5,29 @@
 	import { _ } from 'svelte-i18n';
 	import { locale, locales } from 'svelte-i18n';
 	import { writable } from 'svelte/store';
+	import {nodes as testNodes} from "$lib/nodes";
 
 	const nodes = writable<SuperhubNodes>([]);
-	onMount(async () => {
-		const res = await fetch('/update');
-		$nodes = await res.json();
-	});
+	$nodes = testNodes;
+	// onMount(async () => {
+	// 	const res = await fetch('/update');
+	// 	$nodes = await res.json();
+	// });
 </script>
 
-<select bind:value={$locale}>
-	{#each $locales as locale}
-		<option value={locale}>{locale}</option>
+<div class="border-4 border-secondary bg-color-background h-fit p-1 w-40 grid gap-2 grid-cols-3 absolute top-8 lg:top-12 xl:top-14 right-14 xl:right-20">
+	{#each [
+		["us", "American", "en-US"],
+		["uk", "Ukrainian", "uk"],
+		["ru", "Russian", "ru"],
+	] as [flag, alt, localeName]}
+		<img
+			src={`/flags/${flag}.svg`} alt={`${alt} flag`}
+			on:click={() => $locale = localeName}
+			class="cursor-pointer"
+		/>
 	{/each}
-</select>
+</div>
 
 <div class="grid place-items-center pt-20 text-center">
 	<h1 class="text-5xl font-black">
