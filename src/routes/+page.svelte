@@ -18,7 +18,7 @@
 	</p>
 </div>
 
-<div class="pt-10 max-w-5xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="pt-10 max-w-5xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 	{#each nodes as node}
 		<div class="bg-secondary rounded-md px-4 py-5 w-full relative">
 			<h3 class="font-extrabold">{firstCapital(node.name)}</h3>
