@@ -58,8 +58,8 @@ export class Database {
 
 	async getMonitoringSince(nodeName: string): Promise<number> {
 		const result = await kv.get<number>(`node:${nodeName}:monitoringSince`);
-		if (result !== null) return result
-		await this.foundServer(nodeName)
-		return this.#getNow()
+		if (result !== null) return result;
+		await this.foundServer(nodeName);
+		return this.#getNow();
 	}
 }

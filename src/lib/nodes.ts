@@ -1,4 +1,4 @@
-import type {SuperhubNodes} from "$lib/server/fetch-data/interfaces";
+import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 
 function generateRandomUptimeAfterDot() {
 	const min = Math.ceil(0);
@@ -17,17 +17,17 @@ export const nodes: SuperhubNodes = Array.from(
 		{
 			start: 1689839351,
 			end: 1689839351 + 103,
-			isEnded: true,
+			isEnded: true
 		},
 		{
 			start: 1689871751,
 			end: 1689871751 + 124,
-			isEnded: true,
+			isEnded: true
 		},
 		{
 			start: 1689911351,
 			end: 1689911351 + 32,
-			isEnded: true,
+			isEnded: true
 		}
 	],
 	monitoringSince: 1689738551

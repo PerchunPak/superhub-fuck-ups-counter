@@ -21,7 +21,7 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 
 	const resultNodes: SuperhubNodes = [];
 	for (const node of fromKuma) {
-		await db.foundServer(node.name)
+		await db.foundServer(node.name);
 		if (node.isDown) {
 			await db.fuckUpStart(node.name);
 		}

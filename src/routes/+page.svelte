@@ -1,9 +1,13 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 	import { firstCapital, formatUnixTimestamp, calculateTotalDowntime } from '$lib/utils';
-	import {nodes} from "$lib/nodes";
+	import { onMount } from 'svelte';
 
-	// export let nodes: PageData;
+	let nodes: SuperhubNodes = [];
+	onMount(async () => {
+		const res = await fetch('/update');
+		nodes = await res.json();
+	});
 </script>
 
 <div class="grid place-items-center pt-20 text-center">
