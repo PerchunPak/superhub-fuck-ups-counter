@@ -7,10 +7,17 @@
 	import { writable } from 'svelte/store';
 
 	const nodes = writable<SuperhubNodes>([]);
-	onMount(async () => {
+	async function updateNodes() {
 		const res = await fetch('/update');
-		$nodes = await res.json();
-	});
+		nodes.set(await res.json());
+	}
+	onMount(updateNodes);
+
+	let interval;
+	$: {
+		clearInterval(interval);
+		interval = setInterval(updateNodes, 60 * 1000);
+	}
 </script>
 
 <div class="border-4 border-secondary bg-color-background h-fit p-1 w-40 grid gap-2 grid-cols-3 absolute top-8 lg:top-12 xl:top-14 right-14 xl:right-20">
