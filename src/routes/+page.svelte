@@ -49,9 +49,9 @@
 			</p>
 			<div
 				class="absolute top-5 right-5 py-1 px-3 rounded-md font-bold border-2 text-sm"
-				class:uptime-good={node.uptime >= 99}
-				class:uptime-average={99 > node.uptime >= 90}
-				class:uptime-bad={node.uptime < 90}
+				class:uptime-good={node.uptime >= 99.0}
+				class:uptime-average={99.0 > node.uptime && node.uptime >= 90.0}
+				class:uptime-bad={node.uptime < 90.0}
 			>
 				{node.uptime}%
 			</div>
