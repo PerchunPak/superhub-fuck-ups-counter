@@ -1,3 +1,14 @@
 {
-	"my.translation.key": "Hello world!"
+	"title": {
+		"prefix": " ",
+		"suffix": "'s fuck-ups counter"
+	},
+	"description": "We just track the stability of their nodes, so you can know which is the stablest one.",
+	"nodes": {
+		"Count of fuck-ups:": "Count of fuck-ups:",
+		"Total downtime is": "Total downtime is",
+		"Currently down.": "Currently down.",
+		"Last downtime was": "Last downtime was",
+		"Monitoring for": "Monitoring for"
+	}
 }

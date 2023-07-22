@@ -2,52 +2,66 @@
 	import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 	import { firstCapital, formatUnixTimestamp, calculateTotalDowntime } from '$lib/utils';
 	import { onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
+	import { locale, locales } from 'svelte-i18n';
+	import { writable } from 'svelte/store';
 
-	let nodes: SuperhubNodes = [];
+	const nodes = writable<SuperhubNodes>([]);
 	onMount(async () => {
 		const res = await fetch('/update');
-		nodes = await res.json();
+		$nodes = await res.json();
 	});
 </script>
 
+<select bind:value={$locale}>
+	{#each $locales as locale}
+		<option value={locale}>{locale}</option>
+	{/each}
+</select>
+
 <div class="grid place-items-center pt-20 text-center">
 	<h1 class="text-5xl font-black">
-		<a
+		{$_('title.prefix')}<a
 			href="https://superhub.host"
 			class="text-transparent bg-clip-text bg-gradient-to-r from-color-text to-accent"
 		>
 			Superhub</a
-		>'s fuck-ups counter
+		>{$_('title.suffix')}
 	</h1>
 	<p class="pt-5 text-xl max-w-xl">
-		We basically track the stability of their nodes, so you can know which is the stablest one.
+		{$_('description')}
 	</p>
 </div>
 
 <div class="pt-10 max-w-5xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-	{#each nodes as node}
+	{#each $nodes as node}
 		<div class="bg-secondary rounded-md px-4 py-5 w-full relative">
 			<h3 class="font-extrabold">{firstCapital(node.name)}</h3>
-			<p>Count of fuck-ups: <span class="font-bold">{node.fuckUps.length}</span>.</p>
+			<p>{$_('nodes.Count of fuck-ups:')} <span class="font-bold">{node.fuckUps.length}</span>.</p>
 			<p>
-				Total downtime is <span class="font-bold"
-					>{formatUnixTimestamp(calculateTotalDowntime(node.fuckUps), 'amount of time')}</span
+				{$_('nodes.Total downtime is')}
+				<span class="font-bold"
+					>{($locale,
+					formatUnixTimestamp(calculateTotalDowntime(node.fuckUps), 'amount of time'))}</span
 				>.
 			</p>
 
 			{#if node.isDown}
-				<p class="text-red-700">Currently down.</p>
+				<p class="text-red-700">{$_('nodes.Currently down.')}</p>
 			{:else}
 				<p>
-					Last downtime was <span class="font-bold"
-						>{formatUnixTimestamp(node.fuckUps.slice(-1)[0].start, 'from now with suffix')}</span
+					{$_('nodes.Last downtime was')}
+					<span class="font-bold"
+						>{($locale,
+						formatUnixTimestamp(node.fuckUps.slice(-1)[0].start, 'from now with suffix'))}</span
 					>.
 				</p>
 			{/if}
 
 			<p>
-				Monitoring for <span class="font-bold"
-					>{formatUnixTimestamp(node.monitoringSince, 'from now')}</span
+				{$_('nodes.Monitoring for')}
+				<span class="font-bold"
+					>{($locale, formatUnixTimestamp(node.monitoringSince, 'from now'))}</span
 				>.
 			</p>
 			<div

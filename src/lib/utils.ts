@@ -1,8 +1,21 @@
 import { formatDistance } from 'date-fns';
 import type { NodeFuckUp } from '$lib/server/fetch-data/interfaces';
+import { locale as localeStore } from 'svelte-i18n';
+import { get } from 'svelte/store';
+import { enUS, ru, uk } from 'date-fns/locale';
 
 export function firstCapital(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function getDateFnsLocale() {
+	const currentLocale = get(localeStore);
+	if (currentLocale === null || currentLocale === undefined)
+		throw new Error('Unexpected locale happened!');
+
+	if (currentLocale === 'ru') return ru;
+	else if (currentLocale === 'uk') return uk;
+	else return enUS;
 }
 
 export function formatUnixTimestamp(
@@ -10,10 +23,11 @@ export function formatUnixTimestamp(
 	formatting: 'amount of time' | 'from now' | 'from now with suffix'
 ): string {
 	if (formatting === 'amount of time') {
-		return formatDistance(0, time * 1000);
+		return formatDistance(0, time * 1000, { locale: getDateFnsLocale() });
 	} else if (formatting.startsWith('from now')) {
 		return formatDistance(new Date(time * 1000), new Date(), {
-			addSuffix: formatting.endsWith('with suffix')
+			addSuffix: formatting.endsWith('with suffix'),
+			locale: getDateFnsLocale()
 		});
 	} else {
 		throw TypeError('Incorrect formatting');
