@@ -1,16 +1,3 @@
-export interface SuperhubNode {
-	name: string;
-	isDown: boolean;
-	uptime: number;
-	monitoringSince: number;
-	fuckUps: {
-		date: number;
-		duration: number;
-	}[];
-}
-
-export type SuperhubNodes = SuperhubNode[];
-
 export type FetchedKumaData = {
 	id: number;
 	name: string;

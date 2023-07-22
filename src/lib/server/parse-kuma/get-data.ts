@@ -1,7 +1,8 @@
 import type { InternalKumaData } from '$lib/server/parse-kuma/interfaces';
+// @ts-expect-error node packages work in runtime, idk what typescript wants
 import vm from 'vm';
 
-export async function getInternalSuperhubNodesData(): InternalKumaData {
+export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> {
 	const html = await getHtml();
 	const code = extractCodeFromHtml(html);
 	const result = executeCode(code);
@@ -47,5 +48,6 @@ function executeCode(code: string): InternalKumaData {
 	const context = { window: {} };
 	vm.createContext(context);
 	vm.runInContext(code, context);
+	// @ts-expect-error dynamic types :)
 	return context.window.preloadData[0];
 }

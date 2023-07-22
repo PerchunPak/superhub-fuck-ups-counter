@@ -1,6 +1,9 @@
 <script lang="ts">
-	import { nodes } from '$lib/nodes';
-	import { firstCapital, formatUnixTimestamp } from '$lib/utils';
+	import type { PageData } from './$types';
+	import { firstCapital, formatUnixTimestamp, calculateTotalDowntime } from '$lib/utils';
+	import {nodes} from "$lib/nodes";
+
+	// export let nodes: PageData;
 </script>
 
 <div class="grid place-items-center pt-20 text-center">
@@ -25,10 +28,7 @@
 			<p>Count of fuck-ups: <span class="font-bold">{node.fuckUps.length}</span>.</p>
 			<p>
 				Total downtime is <span class="font-bold"
-					>{formatUnixTimestamp(
-						node.fuckUps.reduce((partialSum, fuckUp) => partialSum + fuckUp.duration, 0),
-						'amount of time'
-					)}</span
+					>{formatUnixTimestamp(calculateTotalDowntime(node.fuckUps), 'amount of time')}</span
 				>.
 			</p>
 
@@ -37,7 +37,7 @@
 			{:else}
 				<p>
 					Last downtime was <span class="font-bold"
-						>{formatUnixTimestamp(node.fuckUps.slice(-1)[0].date, 'from now with suffix')}</span
+						>{formatUnixTimestamp(node.fuckUps.slice(-1)[0].start, 'from now with suffix')}</span
 					>.
 				</p>
 			{/if}

@@ -1,4 +1,5 @@
 import { formatDistance } from 'date-fns';
+import type { NodeFuckUp } from '$lib/server/fetch-data/interfaces';
 
 export function firstCapital(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -17,4 +18,17 @@ export function formatUnixTimestamp(
 	} else {
 		throw TypeError('Incorrect formatting');
 	}
+}
+
+export function calculateTotalDowntime(fuckUps: NodeFuckUp[]): number {
+	// total downtime in minutes
+	return fuckUps.reduce(
+		(partialSum, fuckUp) =>
+			partialSum +
+			Math.floor(
+				(fuckUp.start - (fuckUp.isEnded ? fuckUp.end : Math.floor(new Date().getTime() / 1000))) /
+					60
+			),
+		0
+	);
 }
