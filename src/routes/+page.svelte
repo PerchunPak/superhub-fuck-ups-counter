@@ -3,7 +3,7 @@
 	import { firstCapital, formatUnixTimestamp, calculateTotalDowntime } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	import { locale, locales } from 'svelte-i18n';
+	import { locale } from 'svelte-i18n';
 	import { writable } from 'svelte/store';
 
 	const nodes = writable<SuperhubNodes>([]);
