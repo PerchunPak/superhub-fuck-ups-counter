@@ -34,8 +34,8 @@ export class Database {
 	async fuckUpStart(nodeName: string): Promise<void> {
 		const key = `node:${nodeName}:fuckUps`;
 
-		const lastFuckUp: NodeFuckUp = await kv.lindex(key, -1);
-		if (!lastFuckUp.isEnded) return;
+		const lastFuckUp: NodeFuckUp | null = await kv.lindex(key, -1);
+		if (lastFuckUp !== null && !lastFuckUp.isEnded) return;
 		await kv.lpush<NodeFuckUp>(key, { start: this.#getNow(), end: 0, isEnded: false });
 	}
 
