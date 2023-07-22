@@ -5,14 +5,12 @@
 	import { _ } from 'svelte-i18n';
 	import { locale, locales } from 'svelte-i18n';
 	import { writable } from 'svelte/store';
-	import {nodes as testNodes} from "$lib/nodes";
 
 	const nodes = writable<SuperhubNodes>([]);
-	$nodes = testNodes;
-	// onMount(async () => {
-	// 	const res = await fetch('/update');
-	// 	$nodes = await res.json();
-	// });
+	onMount(async () => {
+		const res = await fetch('/update');
+		$nodes = await res.json();
+	});
 </script>
 
 <div class="border-4 border-secondary bg-color-background h-fit p-1 w-40 grid gap-2 grid-cols-3 absolute top-8 lg:top-12 xl:top-14 right-14 xl:right-20">
