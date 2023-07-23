@@ -27,7 +27,7 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 		}
 
 		const fuckUps = await db.getFuckUps(node.name);
-		if (!node.isDown && !fuckUps.slice(-1)[0].isEnded) {
+		if (!node.isDown && fuckUps.length > 0 && !fuckUps.slice(-1)[0].isEnded) {
 			await db.fuckUpStop(node.name);
 		}
 		const monitoringSince = await db.getMonitoringSince(node.name);
