@@ -63,6 +63,8 @@
 
 			{#if node.isDown}
 				<p class="text-red-700">{$_('nodes.Currently down.')}</p>
+			{:else if node.fuckUps.length === 0}
+				<p class="text-green-500">{$_('nodes.There were no fuck-ups (yet).')}</p>
 			{:else}
 				<p>
 					{$_('nodes.Last downtime was')}
