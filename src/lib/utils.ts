@@ -1,5 +1,5 @@
 import { formatDistance } from 'date-fns';
-import type {NodeFuckUp, SuperhubNodes} from '$lib/server/fetch-data/interfaces';
+import type { NodeFuckUp, SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 import { locale as localeStore } from 'svelte-i18n';
 import { get } from 'svelte/store';
 import { enUS, ru, uk } from 'date-fns/locale/index';
@@ -36,14 +36,11 @@ export function formatUnixTimestamp(
 
 export function calculateTotalDowntime(fuckUps: NodeFuckUp[]): number {
 	if (fuckUps.length === 0) return 0;
-	// total downtime in minutes
+	// total downtime in seconds
 	return fuckUps.reduce(
 		(partialSum, fuckUp) =>
 			partialSum +
-			Math.floor(
-				(fuckUp.start - (fuckUp.isEnded ? fuckUp.end : Math.floor(new Date().getTime() / 1000))) /
-					60
-			),
+			((fuckUp.isEnded ? fuckUp.end : Math.floor(new Date().getTime() / 1000)) - fuckUp.start),
 		0
 	);
 }
@@ -61,5 +58,5 @@ export function fixDownNodesEndTime(nodes: SuperhubNodes): SuperhubNodes {
 			return fuckUp;
 		});
 		return node;
-	})
+	});
 }
