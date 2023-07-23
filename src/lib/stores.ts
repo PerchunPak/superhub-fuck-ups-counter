@@ -2,6 +2,7 @@ import type { SuperhubNodes, SuperhubNode } from '$lib/server/fetch-data/interfa
 import { writable } from 'svelte/store';
 import { get } from 'svelte/store';
 import { calculateTotalDowntime } from '$lib/utils';
+import { Database } from '$lib/server/db';
 
 export const nodes = writable<SuperhubNodes | Error>([]);
 export const sortNodesBy = writable<
@@ -56,4 +57,20 @@ sortNodesBy.subscribe((sortBy) => {
 		}
 	});
 	nodes.set(nodesStoreValue);
+});
+
+nodes.subscribe((newNodes) => {
+	if (newNodes instanceof Error || newNodes.messages !== undefined) return;
+
+	nodes.set(
+		newNodes.map((node) => {
+			node.fuckUps = node.fuckUps.map((fuckUp) => {
+				if (fuckUp.end === 0) {
+					fuckUp.end = Database.getNow();
+				}
+				return fuckUp;
+			});
+			return node;
+		})
+	);
 });
