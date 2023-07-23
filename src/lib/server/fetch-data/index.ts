@@ -44,5 +44,9 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 }
 
 function calculateUptime(monitoringSince: number, fuckUps: NodeFuckUp[]): number {
-	return (1 - calculateTotalDowntime(fuckUps) / monitoringSince) * 100;
+	return roundNumberToTwoPlacesAfterDot((1 - calculateTotalDowntime(fuckUps) / monitoringSince) * 100);
+}
+
+function roundNumberToTwoPlacesAfterDot(num: number): number {
+	return Math.round((num + Number.EPSILON) * 100) / 100
 }
