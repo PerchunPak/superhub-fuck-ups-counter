@@ -21,6 +21,6 @@ export async function getDownNodes(nodes: InternalKumaNodeData[]): Promise<numbe
 	const json = await result.json();
 
 	return nodes
-		.filter((node) => json.heartbeatList[node.id].slice(-1)[0].status === 1)
+		.filter((node) => json.heartbeatList[node.id].slice(-1)[0].status !== 1)
 		.map((node) => node.id);
 }
