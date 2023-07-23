@@ -2,7 +2,7 @@ import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 import { Database } from '$lib/server/db';
 import { fetchKumaNodesData } from '$lib/server/parse-kuma';
 import type { NodeFuckUp } from '$lib/server/fetch-data/interfaces';
-import { calculateTotalDowntime } from '$lib/utils';
+import { calculateTotalDowntime, getDatabaseNow } from '$lib/utils';
 import type { KnownNode } from '$lib/server/db/interfaces';
 
 export async function getNodesData(): Promise<SuperhubNodes> {
@@ -71,7 +71,7 @@ function mergeKnownNodes(fromDb: KnownNode[], fromKuma: string[]): KnownNode[] {
 	const alreadyAddedNames: string[] = merged.map((e) => e.name);
 	for (const nodeName of fromKuma) {
 		if (!alreadyAddedNames.includes(nodeName)) {
-			merged.push({ name: nodeName, foundAt: Database.getNow() });
+			merged.push({ name: nodeName, foundAt: getDatabaseNow() });
 			alreadyAddedNames.push(nodeName);
 		}
 	}

@@ -47,3 +47,7 @@ export function calculateTotalDowntime(fuckUps: NodeFuckUp[]): number {
 		0
 	);
 }
+
+export function getDatabaseNow(): number {
+	return Math.floor(new Date().getTime() / 1000);
+}

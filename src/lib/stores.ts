@@ -1,8 +1,7 @@
 import type { SuperhubNodes, SuperhubNode } from '$lib/server/fetch-data/interfaces';
 import { writable } from 'svelte/store';
 import { get } from 'svelte/store';
-import { calculateTotalDowntime } from '$lib/utils';
-import { Database } from '$lib/server/db';
+import { calculateTotalDowntime, getDatabaseNow } from '$lib/utils';
 
 export const nodes = writable<SuperhubNodes | Error>([]);
 export const sortNodesBy = writable<
@@ -66,7 +65,7 @@ nodes.subscribe((newNodes) => {
 		newNodes.map((node) => {
 			node.fuckUps = node.fuckUps.map((fuckUp) => {
 				if (fuckUp.end === 0) {
-					fuckUp.end = Database.getNow();
+					fuckUp.end = getDatabaseNow();
 				}
 				return fuckUp;
 			});

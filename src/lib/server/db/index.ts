@@ -3,13 +3,11 @@ import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 import { Redis } from '@upstash/redis';
 import { REDIS_URL, REDIS_TOKEN } from '$env/static/private';
 import type { KnownNode } from '$lib/server/db/interfaces';
+import { getDatabaseNow } from '$lib/utils';
 
 const SEVEN_DAYS = 604800;
 
 export class Database {
-	static getNow(): number {
-		return Math.floor(new Date().getTime() / 1000);
-	}
 	#redis;
 
 	constructor() {
@@ -39,7 +37,7 @@ export class Database {
 
 		const lastFuckUp: NodeFuckUp | null = await this.#redis.lindex(key, -1);
 		if (lastFuckUp !== null && !lastFuckUp.isEnded) return;
-		await this.#redis.lpush<NodeFuckUp>(key, { start: Database.getNow(), end: 0, isEnded: false });
+		await this.#redis.lpush<NodeFuckUp>(key, { start: getDatabaseNow(), end: 0, isEnded: false });
 	}
 
 	async fuckUpStop(nodeName: string): Promise<void> {
@@ -47,7 +45,7 @@ export class Database {
 
 		const lastFuckUp: NodeFuckUp = await this.#redis.lindex(key, -1);
 		if (lastFuckUp.isEnded) return; // races <3
-		lastFuckUp.end = Database.getNow();
+		lastFuckUp.end = getDatabaseNow();
 		lastFuckUp.isEnded = true;
 		await this.#redis.lset<NodeFuckUp>(key, -1, lastFuckUp);
 	}
