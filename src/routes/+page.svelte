@@ -1,12 +1,11 @@
 <script lang="ts">
-	import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
+	import SelectSortBy from './components/SelectSortBy.svelte';
 	import { firstCapital, formatUnixTimestamp, calculateTotalDowntime } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { locale } from 'svelte-i18n';
-	import { writable } from 'svelte/store';
+	import { nodes } from '$lib/stores';
 
-	const nodes = writable<SuperhubNodes | Error>([]);
 	onMount(() => {
 		async function updateNodes() {
 			try {
@@ -98,51 +97,56 @@
 		<span class="sr-only">Loading...</span>
 	</div>
 {:else}
-	<div class="pt-10 max-w-5xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-		{#each $nodes as node}
-			<div class="bg-secondary rounded-md px-4 py-5 w-full relative">
-				<h3 class="font-extrabold">{firstCapital(node.name)}</h3>
-				<p>
-					{$_('nodes.Count of fuck-ups:')} <span class="font-bold">{node.fuckUps.length}</span>.
-				</p>
-				<p>
-					{$_('nodes.Total downtime is')}
-					<span class="font-bold"
-						>{($locale,
-						formatUnixTimestamp(calculateTotalDowntime(node.fuckUps), 'amount of time'))}</span
-					>.
-				</p>
-
-				{#if node.isDown}
-					<p class="text-red-700">{$_('nodes.Currently down.')}</p>
-				{:else if node.fuckUps.length === 0}
-					<p class="text-green-500">{$_('nodes.There were no fuck-ups (yet).')}</p>
-				{:else}
+	<div class="pt-10 max-w-5xl">
+		<div class="pt-2 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+			<div class="hidden lg:block" />
+			<div class="hidden sm:block" />
+			<SelectSortBy />
+			{#each $nodes as node}
+				<div class="bg-secondary rounded-md px-4 py-5 w-full relative">
+					<h3 class="font-extrabold">{firstCapital(node.name)}</h3>
 					<p>
-						{$_('nodes.Last downtime was')}
+						{$_('nodes.Count of fuck-ups:')} <span class="font-bold">{node.fuckUps.length}</span>.
+					</p>
+					<p>
+						{$_('nodes.Total downtime is')}
 						<span class="font-bold"
 							>{($locale,
-							formatUnixTimestamp(node.fuckUps.slice(-1)[0].start, 'from now with suffix'))}</span
+							formatUnixTimestamp(calculateTotalDowntime(node.fuckUps), 'amount of time'))}</span
 						>.
 					</p>
-				{/if}
 
-				<p>
-					{$_('nodes.Monitoring for')}
-					<span class="font-bold"
-						>{($locale, formatUnixTimestamp(node.monitoringSince, 'from now'))}</span
-					>.
-				</p>
-				<div
-					class="absolute top-5 right-5 py-1 px-3 rounded-md font-bold border-2 text-sm"
-					class:uptime-good={node.uptime >= 99.0}
-					class:uptime-average={99.0 > node.uptime && node.uptime >= 90.0}
-					class:uptime-bad={node.uptime < 90.0}
-				>
-					{node.uptime}%
+					{#if node.isDown}
+						<p class="text-red-700">{$_('nodes.Currently down.')}</p>
+					{:else if node.fuckUps.length === 0}
+						<p class="text-green-500">{$_('nodes.There were no fuck-ups (yet).')}</p>
+					{:else}
+						<p>
+							{$_('nodes.Last downtime was')}
+							<span class="font-bold"
+								>{($locale,
+								formatUnixTimestamp(node.fuckUps.slice(-1)[0].start, 'from now with suffix'))}</span
+							>.
+						</p>
+					{/if}
+
+					<p>
+						{$_('nodes.Monitoring for')}
+						<span class="font-bold"
+							>{($locale, formatUnixTimestamp(node.monitoringSince, 'from now'))}</span
+						>.
+					</p>
+					<div
+						class="absolute top-5 right-5 py-1 px-3 rounded-md font-bold border-2 text-sm"
+						class:uptime-good={node.uptime >= 99.0}
+						class:uptime-average={99.0 > node.uptime && node.uptime >= 90.0}
+						class:uptime-bad={node.uptime < 90.0}
+					>
+						{node.uptime}%
+					</div>
 				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
 	</div>
 {/if}
 
