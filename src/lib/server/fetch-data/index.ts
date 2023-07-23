@@ -60,7 +60,6 @@ function roundNumberToTwoPlacesAfterDot(num: number): number {
 }
 
 function mergeKnownNodes(fromDb: KnownNode[], fromKuma: string[]): KnownNode[] {
-	// this is stupid hell
 	const merged: KnownNode[] = [];
 
 	for (const node of fromDb) {
@@ -68,21 +67,14 @@ function mergeKnownNodes(fromDb: KnownNode[], fromKuma: string[]): KnownNode[] {
 			merged.push(node);
 		}
 	}
-	const nodeNamesFromDb = fromDb.map((e) => e.name);
+
+	const alreadyAddedNames: string[] = merged.map((e) => e.name);
 	for (const nodeName of fromKuma) {
-		if (nodeNamesFromDb.includes(nodeName)) {
+		if (!alreadyAddedNames.includes(nodeName)) {
 			merged.push({ name: nodeName, foundAt: Database.getNow() });
+			alreadyAddedNames.push(nodeName);
 		}
 	}
 
-	const withoutDuplicates: KnownNode[] = [];
-	const withoutDuplicatesOnlyNames: string[] = [];
-	for (const node of merged) {
-		if (!withoutDuplicatesOnlyNames.includes(node.name)) {
-			withoutDuplicates.push(node);
-			withoutDuplicatesOnlyNames.push(node.name);
-		}
-	}
-
-	return withoutDuplicates;
+	return merged;
 }
