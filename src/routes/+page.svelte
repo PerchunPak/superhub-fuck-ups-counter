@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SelectSortBy from './components/SelectSortBy.svelte';
-	import { firstCapital, formatUnixTimestamp, calculateTotalDowntime } from '$lib/utils';
+	import { firstCapital, formatUnixTimestamp, calculateTotalDowntime, fixDownNodesEndTime } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { locale } from 'svelte-i18n';
@@ -10,7 +10,9 @@
 		async function updateNodes() {
 			try {
 				const res = await fetch('/update');
-				nodes.set(await res.json());
+				const fetchedNodes = await res.json();
+				fixDownNodesEndTime(fetchedNodes);
+				nodes.set(fetchedNodes)
 			} catch (e) {
 				nodes.set(e);
 			}
