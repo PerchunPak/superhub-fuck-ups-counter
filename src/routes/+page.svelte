@@ -17,18 +17,16 @@
 
 		return () => clearInterval(interval);
 	});
-
 </script>
 
-<div class="border-4 border-secondary bg-color-background h-fit p-1 w-40 grid gap-2 grid-cols-3 absolute top-8 lg:top-12 xl:top-14 right-14 xl:right-20">
-	{#each [
-		["us", "American", "en-US"],
-		["uk", "Ukrainian", "uk"],
-		["ru", "Russian", "ru"],
-	] as [flag, alt, localeName]}
+<div
+	class="border-4 border-secondary bg-color-background h-fit p-1 w-40 grid gap-2 grid-cols-3 absolute top-8 lg:top-12 xl:top-14 right-14 xl:right-20"
+>
+	{#each [['us', 'American', 'en-US'], ['uk', 'Ukrainian', 'uk'], ['ru', 'Russian', 'ru']] as [flag, alt, localeName]}
 		<img
-			src={`/flags/${flag}.svg`} alt={`${alt} flag`}
-			on:click={() => $locale = localeName}
+			src={`/flags/${flag}.svg`}
+			alt={`${alt} flag`}
+			on:click={() => ($locale = localeName)}
 			class="cursor-pointer"
 		/>
 	{/each}

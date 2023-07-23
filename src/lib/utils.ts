@@ -35,6 +35,7 @@ export function formatUnixTimestamp(
 }
 
 export function calculateTotalDowntime(fuckUps: NodeFuckUp[]): number {
+	if (fuckUps.length === 0) return 0;
 	// total downtime in minutes
 	return fuckUps.reduce(
 		(partialSum, fuckUp) =>
