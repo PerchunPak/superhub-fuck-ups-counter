@@ -25,13 +25,13 @@ export class Database {
 	}
 
 	async getKnownNodes(): Promise<KnownNode[]> {
-		const unparsedResult = await this.#redis.get<string>('knownNodes');
-		if (unparsedResult === null) return [];
-		return JSON.parse(unparsedResult);
+		const result = await this.#redis.get<KnownNode[]>('knownNodes');
+		if (result === null) return [];
+		return result;
 	}
 
 	async setKnownNodes(knownNodes: KnownNode[]): Promise<void> {
-		await this.#redis.set('knownNodes', JSON.stringify(knownNodes), { ex: SEVEN_DAYS });
+		await this.#redis.set('knownNodes', knownNodes, { ex: SEVEN_DAYS });
 	}
 
 	async fuckUpStart(nodeName: string): Promise<void> {
