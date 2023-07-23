@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/node,linux,python,windows,pycharm+all,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=node,linux,python,windows,pycharm+all,visualstudiocode
+# Created by https://www.toptal.com/developers/gitignore/api/node,linux,python,windows,pycharm+all,visualstudiocode,vercel
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,linux,python,windows,pycharm+all,visualstudiocode,vercel
 
 ### Linux ###
 *~
@@ -413,6 +413,9 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+### Vercel ###
+.vercel
+
 ### VisualStudioCode ###
 .vscode/*
 #!.vscode/settings.json
@@ -458,4 +461,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/node,linux,python,windows,pycharm+all,visualstudiocode
+# End of https://www.toptal.com/developers/gitignore/api/node,linux,python,windows,pycharm+all,visualstudiocode,vercel
