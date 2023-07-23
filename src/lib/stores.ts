@@ -37,13 +37,14 @@ sortNodesBy.subscribe((sortBy) => {
 	}
 
 	nodesStoreValue.sort((nodeA, nodeB): number => {
+		const fuckUpsCountComparison = compareTwoValues(nodeA.fuckUps.length, nodeB.fuckUps.length);
 		switch (sortBy) {
 			case 'uptime-percent':
 				return compareTwoValues(nodeA.uptime, nodeB.uptime);
 			case 'name':
 				return compareTwoValues(nodeA.name, nodeB.name);
 			case 'fuck-ups-count':
-				return compareTwoValues(nodeA.fuckUps.length, nodeB.fuckUps.length);
+				return fuckUpsCountComparison === 0 ? 1 : fuckUpsCountComparison === 1 ? 0 : -1;
 			case 'total-downtime':
 				return compareTwoValues(
 					calculateTotalDowntime(nodeA.fuckUps),
