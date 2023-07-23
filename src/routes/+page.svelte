@@ -19,6 +19,10 @@
 	});
 </script>
 
+<head>
+	<title>{$_('title.prefix')}Superhub{$_('title.suffix')}</title>
+</head>
+
 <div
 	class="border-4 border-secondary bg-color-background h-fit p-1 w-40 grid gap-2 grid-cols-3 absolute top-8 lg:top-12 xl:top-14 right-14 xl:right-20"
 >
