@@ -50,6 +50,7 @@ export class Database {
 
 		const lastFuckUp: NodeFuckUp = await this.#redis.lindex(key, -1);
 		if (lastFuckUp.isEnded) return; // races <3
+		lastFuckUp.end = this.#getNow();
 		lastFuckUp.isEnded = true;
 		await this.#redis.lset<NodeFuckUp>(key, -1, lastFuckUp);
 	}
