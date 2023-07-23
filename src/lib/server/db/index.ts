@@ -1,15 +1,21 @@
 import type { NodeFuckUp } from '$lib/server/fetch-data/interfaces';
 import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+import { REDIS_URL, REDIS_TOKEN } from '$env/static/private';
 
 export class Database {
 	#getNow(): number {
 		return Math.floor(new Date().getTime() / 1000);
 	}
+	#redis;
+
+	constructor() {
+		this.#redis = new Redis({ url: REDIS_URL, token: REDIS_TOKEN });
+	}
 
 	async isCacheValid(): Promise<boolean> {
 		const now = this.#getNow();
-		const lastCached = await kv.get<number>('lastCached');
+		const lastCached = await this.#redis.get<number>('lastCached');
 
 		if (lastCached === null) {
 			return false;
@@ -18,7 +24,7 @@ export class Database {
 	}
 
 	async getResponseFromCache(): Promise<SuperhubNodes> {
-		const cached = await kv.get<SuperhubNodes>('cached');
+		const cached = await this.#redis.get<SuperhubNodes>('cached');
 
 		if (cached === null) {
 			throw new Error('No cache available for responding with it');
@@ -27,37 +33,37 @@ export class Database {
 	}
 
 	async saveResponseToCache(response: SuperhubNodes): Promise<void> {
-		await kv.set('cached', response);
-		await kv.set('lastCached', this.#getNow());
+		await this.#redis.set('cached', response);
+		await this.#redis.set('lastCached', this.#getNow());
 	}
 
 	async fuckUpStart(nodeName: string): Promise<void> {
 		const key = `node:${nodeName}:fuckUps`;
 
-		const lastFuckUp: NodeFuckUp | null = await kv.lindex(key, -1);
+		const lastFuckUp: NodeFuckUp | null = await this.#redis.lindex(key, -1);
 		if (lastFuckUp !== null && !lastFuckUp.isEnded) return;
-		await kv.lpush<NodeFuckUp>(key, { start: this.#getNow(), end: 0, isEnded: false });
+		await this.#redis.lpush<NodeFuckUp>(key, { start: this.#getNow(), end: 0, isEnded: false });
 	}
 
 	async fuckUpStop(nodeName: string): Promise<void> {
 		const key = `node:${nodeName}:fuckUps`;
 
-		const lastFuckUp: NodeFuckUp = await kv.lindex(key, -1);
+		const lastFuckUp: NodeFuckUp = await this.#redis.lindex(key, -1);
 		if (lastFuckUp.isEnded) return; // races <3
 		lastFuckUp.isEnded = true;
-		await kv.lset<NodeFuckUp>(key, -1, lastFuckUp);
+		await this.#redis.lset<NodeFuckUp>(key, -1, lastFuckUp);
 	}
 
 	async getFuckUps(nodeName: string): Promise<NodeFuckUp[]> {
-		return kv.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1);
+		return this.#redis.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1);
 	}
 
 	async foundServer(name: string): Promise<void> {
-		await kv.setnx(`node:${name}:monitoringSince`, this.#getNow());
+		await this.#redis.setnx(`node:${name}:monitoringSince`, this.#getNow());
 	}
 
 	async getMonitoringSince(nodeName: string): Promise<number> {
-		const result = await kv.get<number>(`node:${nodeName}:monitoringSince`);
+		const result = await this.#redis.get<number>(`node:${nodeName}:monitoringSince`);
 		if (result !== null) return result;
 		await this.foundServer(nodeName);
 		return this.#getNow();
