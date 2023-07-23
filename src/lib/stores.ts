@@ -37,14 +37,13 @@ sortNodesBy.subscribe((sortBy) => {
 	}
 
 	nodesStoreValue.sort((nodeA, nodeB): number => {
-		const fuckUpsCountComparison = compareTwoValues(nodeA.fuckUps.length, nodeB.fuckUps.length);
 		switch (sortBy) {
 			case 'uptime-percent':
 				return compareTwoValues(nodeA.uptime, nodeB.uptime);
 			case 'name':
 				return compareTwoValues(nodeA.name, nodeB.name);
 			case 'fuck-ups-count':
-				return fuckUpsCountComparison === 0 ? 1 : fuckUpsCountComparison === 1 ? 0 : -1;
+				return compareTwoValues(nodeA.fuckUps.length, nodeB.fuckUps.length);
 			case 'total-downtime':
 				return compareTwoValues(
 					calculateTotalDowntime(nodeA.fuckUps),
@@ -56,5 +55,7 @@ sortNodesBy.subscribe((sortBy) => {
 				return compareTwoValues(nodeA.monitoringSince, nodeB.monitoringSince);
 		}
 	});
+	if (sortBy === 'fuck-ups-count' || sortBy === 'total-downtime' || sortBy === 'last-downtime' || sortBy === 'first-noticed')
+		nodesStoreValue.reverse()
 	nodes.set(nodesStoreValue);
 });
