@@ -8,7 +8,8 @@ export async function fetchKumaNodesData(): Promise<FetchedKumaData> {
 
 	return internalData.publicGroupList[1].monitorList.map((node) => ({
 		id: node.id,
-		name: node.name,
+		// @ts-expect-error it can't be null
+		name: node.name.match(/(^\w+)/)[1],
 		isDown: downNodes.includes(node.id)
 	}));
 }
