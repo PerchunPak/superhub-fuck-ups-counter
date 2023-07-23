@@ -31,7 +31,7 @@
 	<div class="border-4 border-secondary bg-color-background h-fit p-1 w-40 grid gap-2 grid-cols-3">
 		{#each [['us', 'American', 'en-US'], ['uk', 'Ukrainian', 'uk'], ['ru', 'Russian', 'ru']] as [flag, alt, localeName]}
 			<button type="button" on:click={() => ($locale = localeName)}>
-				<img src={`/flags/${flag}.svg`} alt={`${alt} flag`} />
+				<img src={`/flags/${flag}.svg`} alt={`${alt} flag`} class="rounded" />
 			</button>
 		{/each}
 	</div>
