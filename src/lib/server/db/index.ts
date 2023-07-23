@@ -3,6 +3,8 @@ import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 import { Redis } from '@upstash/redis';
 import { REDIS_URL, REDIS_TOKEN } from '$env/static/private';
 
+const SEVEN_DAYS = 604800;
+
 export class Database {
 	#getNow(): number {
 		return Math.floor(new Date().getTime() / 1000);
@@ -33,7 +35,7 @@ export class Database {
 	}
 
 	async saveResponseToCache(response: SuperhubNodes): Promise<void> {
-		await this.#redis.set('cached', response);
+		await this.#redis.set('cached', response, { ex: SEVEN_DAYS });
 		await this.#redis.set('lastCached', this.#getNow());
 	}
 
@@ -60,7 +62,7 @@ export class Database {
 	}
 
 	async foundServer(name: string): Promise<void> {
-		await this.#redis.setnx(`node:${name}:monitoringSince`, this.#getNow());
+		await this.#redis.set(`node:${name}:monitoringSince`, this.#getNow(), { ex: SEVEN_DAYS, nx: true });
 	}
 
 	async getMonitoringSince(nodeName: string): Promise<number> {
