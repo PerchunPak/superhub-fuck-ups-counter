@@ -15,5 +15,14 @@
 	"error": {
 		"title": "Error happened",
 		"description": "Oops, you can report about it on our "
+	},
+	"sorting": {
+		"Sort by": "Sort by",
+		"Uptime percent": "Uptime percent",
+		"Name": "Name",
+		"Count of fuck-ups": "Count of fuck-ups",
+		"Total downtime": "Total downtime",
+		"Last downtime": "Last downtime",
+		"First noticed": "First noticed"
 	}
 }

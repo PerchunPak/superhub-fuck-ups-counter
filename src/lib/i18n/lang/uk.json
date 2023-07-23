@@ -15,5 +15,14 @@
 	"error": {
 		"title": "Виникла помилка",
 		"description": "Упс, ви можете повідомити про це на нашому "
+	},
+	"sorting": {
+		"Sort by": "Сортувати за",
+		"Uptime percent": "Часом роботи",
+		"Name": "Іменем",
+		"Count of fuck-ups": "Кількістю пройобів",
+		"Total downtime": "Загальним часом простою",
+		"Last downtime": "Останнім простоєм",
+		"First noticed": "Першим появленням"
 	}
 }
