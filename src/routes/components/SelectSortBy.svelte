@@ -8,11 +8,11 @@
 		<span class="label-text">{$_("sorting.Sort by")}</span>
 	</label>
 	<select class="select select-bordered" bind:value={$sortNodesBy}>
-		<option selected>{$_("sorting.Uptime percent")}</option>
-		<option>{$_("sorting.Name")}</option>
-		<option>{$_("sorting.Count of fuck-ups")}</option>
-		<option>{$_("sorting.Total downtime")}</option>
-		<option>{$_("sorting.Last downtime")}</option>
-		<option>{$_("sorting.First noticed")}</option>
+		<option selected value="uptime-percent">{$_("sorting.Uptime percent")}</option>
+		<option value="name">{$_("sorting.Name")}</option>
+		<option value="fuck-ups-count">{$_("sorting.Count of fuck-ups")}</option>
+		<option value="total-downtime">{$_("sorting.Total downtime")}</option>
+		<option value="last-downtime">{$_("sorting.Last downtime")}</option>
+		<option value="first-noticed">{$_("sorting.First noticed")}</option>
 	</select>
 </div>

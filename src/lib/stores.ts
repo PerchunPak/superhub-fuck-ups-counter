@@ -5,12 +5,12 @@ import { calculateTotalDowntime } from '$lib/utils';
 
 export const nodes = writable<SuperhubNodes | Error>([]);
 export const sortNodesBy = writable<
-	| 'Uptime percent'
-	| 'Name'
-	| 'Count of fuck-ups'
-	| 'Total downtime'
-	| 'Last downtime'
-	| 'First noticed'
+	| 'uptime-percent'
+	| 'name'
+	| 'fuck-ups-count'
+	| 'total-downtime'
+	| 'last-downtime'
+	| 'first-noticed'
 >();
 
 sortNodesBy.subscribe((sortBy) => {
@@ -38,20 +38,20 @@ sortNodesBy.subscribe((sortBy) => {
 
 	nodesStoreValue.sort((nodeA, nodeB): number => {
 		switch (sortBy) {
-			case 'Uptime percent':
+			case 'uptime-percent':
 				return compareTwoValues(nodeA.uptime, nodeB.uptime);
-			case 'Name':
+			case 'name':
 				return compareTwoValues(nodeA.name, nodeB.name);
-			case 'Count of fuck-ups':
+			case 'fuck-ups-count':
 				return compareTwoValues(nodeA.fuckUps.length, nodeB.fuckUps.length);
-			case 'Total downtime':
+			case 'total-downtime':
 				return compareTwoValues(
 					calculateTotalDowntime(nodeA.fuckUps),
 					calculateTotalDowntime(nodeB.fuckUps)
 				);
-			case 'Last downtime':
+			case 'last-downtime':
 				return compareTwoValues(parseLastDowntime(nodeA), parseLastDowntime(nodeB));
-			case 'First noticed':
+			case 'first-noticed':
 				return compareTwoValues(nodeA.monitoringSince, nodeB.monitoringSince);
 		}
 	});
