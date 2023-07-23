@@ -11,5 +11,9 @@
 		"There were no fuck-ups (yet).": "There were no fuck-ups (yet).",
 		"Last downtime was": "Last downtime was",
 		"Monitoring for": "Monitoring for"
+	},
+	"error": {
+		"title": "Error happened",
+		"description": "Oops, you can report about it on our "
 	}
 }

@@ -11,5 +11,9 @@
 		"There were no fuck-ups (yet).": "Проёбов не было (пока что).",
 		"Last downtime was": "Последний простой был",
 		"Monitoring for": "Мониторим"
+	},
+	"error": {
+		"title": "Произошла ошибка",
+		"description": "Упс, вы можете сообщить об этом на нашем "
 	}
 }

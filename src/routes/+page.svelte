@@ -6,11 +6,15 @@
 	import { locale } from 'svelte-i18n';
 	import { writable } from 'svelte/store';
 
-	const nodes = writable<SuperhubNodes>([]);
+	const nodes = writable<SuperhubNodes | Error>([]);
 	onMount(() => {
 		async function updateNodes() {
-			const res = await fetch('/update');
-			nodes.set(await res.json());
+			try {
+				const res = await fetch('/update');
+				nodes.set(await res.json());
+			} catch (e) {
+				nodes.set(e);
+			}
 		}
 		const interval = setInterval(updateNodes, 1000 * 60);
 		updateNodes();
@@ -50,7 +54,15 @@
 	</p>
 </div>
 
-{#if $nodes.length === 0}
+{#if $nodes.message !== undefined}
+	<div class="pt-20 text-center">
+		<p class="text-2xl font-bold">{$_('error.title')}</p>
+		<p class="text-xl">
+			{$_('error.description')}<a href="https://github.com/PerchunPak/superhub-fucked-up-counter" class="text-accent underline">GitHub</a>.
+		</p>
+		<code class="text-xl">{$nodes.message}</code>
+	</div>
+{:else if $nodes.length === 0}
 	<div role="status" class="pt-20">
 		<svg
 			aria-hidden="true"
