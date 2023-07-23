@@ -3,12 +3,14 @@ import { Database } from '$lib/server/db';
 import { fetchKumaNodesData } from '$lib/server/parse-kuma';
 import type { NodeFuckUp } from '$lib/server/fetch-data/interfaces';
 import { calculateTotalDowntime } from '$lib/utils';
+import type { KnownNode } from '$lib/server/db/interfaces';
 
 export async function getNodesData(): Promise<SuperhubNodes> {
 	const db = new Database();
+	const cachedResponse = await db.getResponseFromCache();
 
-	if (await db.isCacheValid()) {
-		return await db.getResponseFromCache();
+	if (cachedResponse !== null) {
+		return cachedResponse;
 	}
 
 	const response = await fetchNewResponse(db);
@@ -18,10 +20,14 @@ export async function getNodesData(): Promise<SuperhubNodes> {
 
 async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 	const fromKuma = await fetchKumaNodesData();
+	const knownNodes = mergeKnownNodes(
+		await db.getKnownNodes(),
+		fromKuma.map((e) => e.name)
+	);
+	await db.setKnownNodes(knownNodes);
 
 	const resultNodes: SuperhubNodes = [];
 	for (const node of fromKuma) {
-		await db.foundServer(node.name);
 		if (node.isDown) {
 			await db.fuckUpStart(node.name);
 		}
@@ -30,7 +36,7 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 		if (!node.isDown && fuckUps.length > 0 && !fuckUps.slice(-1)[0].isEnded) {
 			await db.fuckUpStop(node.name);
 		}
-		const monitoringSince = await db.getMonitoringSince(node.name);
+		const monitoringSince = knownNodes.filter((e) => e.name === node.name)[0].foundAt;
 
 		resultNodes.push({
 			name: node.name,
@@ -51,4 +57,32 @@ function calculateUptime(monitoringSince: number, fuckUps: NodeFuckUp[]): number
 
 function roundNumberToTwoPlacesAfterDot(num: number): number {
 	return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
+function mergeKnownNodes(fromDb: KnownNode[], fromKuma: string[]): KnownNode[] {
+	// this is stupid hell
+	const merged: KnownNode[] = [];
+
+	for (const node of fromDb) {
+		if (fromKuma.includes(node.name)) {
+			merged.push(node);
+		}
+	}
+	const nodeNamesFromDb = fromDb.map((e) => e.name);
+	for (const nodeName of fromKuma) {
+		if (nodeNamesFromDb.includes(nodeName)) {
+			merged.push({ name: nodeName, foundAt: Database.getNow() });
+		}
+	}
+
+	const withoutDuplicates: KnownNode[] = [];
+	const withoutDuplicatesOnlyNames: string[] = [];
+	for (const node of merged) {
+		if (!withoutDuplicatesOnlyNames.includes(node.name)) {
+			withoutDuplicates.push(node);
+			withoutDuplicatesOnlyNames.push(node.name);
+		}
+	}
+
+	return withoutDuplicates;
 }

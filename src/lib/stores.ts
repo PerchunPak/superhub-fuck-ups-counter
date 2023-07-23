@@ -19,7 +19,8 @@ sortNodesBy.subscribe((sortBy) => {
 		nodesStoreValue instanceof Error ||
 		nodesStoreValue.messages !== undefined ||
 		sortBy === undefined
-	) return;
+	)
+		return;
 
 	function compareTwoValues(a: any, b: any): -1 | 0 | 1 {
 		if (a < b) {
