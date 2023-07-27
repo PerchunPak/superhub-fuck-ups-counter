@@ -21,11 +21,7 @@ class NodesListClass implements Writable<SuperhubNodes | Error> {
 		this.#sortedNodes = derived(
 			[this.#nodes, sortNodesBy],
 			([$nodes, $sortNodesBy]): SuperhubNodes => {
-				if (
-					$nodes instanceof Error ||
-					$nodes.messages !== undefined ||
-					$sortNodesBy === undefined
-				)
+				if ($nodes instanceof Error || $nodes.messages !== undefined || $sortNodesBy === undefined)
 					return [];
 
 				function compareTwoValues(a: any, b: any): -1 | 0 | 1 {
@@ -43,24 +39,33 @@ class NodesListClass implements Writable<SuperhubNodes | Error> {
 				}
 
 				$nodes.sort((nodeA, nodeB): number => {
+					let toReturn: -1 | 0 | 1 | undefined;
 					switch ($sortNodesBy) {
 						case 'uptime-percent':
-							return compareTwoValues(nodeA.uptime, nodeB.uptime);
+							toReturn = compareTwoValues(nodeA.uptime, nodeB.uptime);
+							break;
 						case 'name':
-							return compareTwoValues(nodeA.name, nodeB.name);
+							toReturn = compareTwoValues(nodeA.name, nodeB.name);
+							break;
 						case 'fuck-ups-count':
-							return compareTwoValues(nodeA.fuckUps.length, nodeB.fuckUps.length);
+							toReturn = compareTwoValues(nodeA.fuckUps.length, nodeB.fuckUps.length);
+							break;
 						case 'total-downtime':
-							return compareTwoValues(
+							toReturn = compareTwoValues(
 								calculateTotalDowntime(nodeA.fuckUps),
 								calculateTotalDowntime(nodeB.fuckUps)
 							);
+							break;
 						case 'last-downtime':
-							return compareTwoValues(parseLastDowntime(nodeA), parseLastDowntime(nodeB));
+							toReturn = compareTwoValues(parseLastDowntime(nodeA), parseLastDowntime(nodeB));
+							break;
 						case 'first-noticed':
-							return compareTwoValues(nodeA.monitoringSince, nodeB.monitoringSince);
+							toReturn = compareTwoValues(nodeA.monitoringSince, nodeB.monitoringSince);
+							break;
 					}
+					return toReturn || compareTwoValues(nodeA.name, nodeB.name);
 				});
+
 				if (
 					$sortNodesBy === 'fuck-ups-count' ||
 					$sortNodesBy === 'total-downtime' ||
