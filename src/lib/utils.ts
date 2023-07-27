@@ -13,8 +13,8 @@ function getDateFnsLocale() {
 	if (currentLocale === null || currentLocale === undefined)
 		throw new Error('Unexpected locale happened!');
 
-	if (currentLocale === 'ru') return ru;
-	else if (currentLocale === 'uk') return uk;
+	if (currentLocale.startsWith('ru')) return ru;
+	else if (currentLocale.startsWith('uk')) return uk;
 	else return enUS;
 }
 
