@@ -7,7 +7,7 @@
 	<label class="label">
 		<span class="label-text">{$_('sorting.Sort by')}</span>
 	</label>
-	<select class="select select-bordered" bind:value={$sortNodesBy}>
+	<select class="select select-bordered bg-secondary" bind:value={$sortNodesBy}>
 		<option selected value="uptime-percent">{$_('sorting.Uptime percent')}</option>
 		<option value="name">{$_('sorting.Name')}</option>
 		<option value="fuck-ups-count">{$_('sorting.Count of fuck-ups')}</option>
