@@ -19,7 +19,7 @@ export class Database {
 	}
 
 	async saveResponseToCache(response: SuperhubNodes): Promise<void> {
-		await this.#redis.set('cached', response, { ex: 300 });
+		await this.#redis.set('cached', response, { ex: 180 });
 	}
 
 	async getKnownNodes(): Promise<KnownNode[]> {
