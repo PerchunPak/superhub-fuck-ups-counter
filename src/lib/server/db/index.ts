@@ -35,7 +35,7 @@ export class Database {
 	async fuckUpStart(nodeName: string): Promise<void> {
 		const key = `node:${nodeName}:fuckUps`;
 
-		const lastFuckUp: NodeFuckUp | null = await this.#redis.lindex(key, -1);
+		const lastFuckUp: NodeFuckUp | null = await this.#redis.lindex(key, 0);
 		if (lastFuckUp !== null && !lastFuckUp.isEnded) return;
 		await this.#redis.lpush<NodeFuckUp>(key, { start: getDatabaseNow(), end: 0, isEnded: false });
 	}
@@ -43,14 +43,14 @@ export class Database {
 	async fuckUpStop(nodeName: string): Promise<void> {
 		const key = `node:${nodeName}:fuckUps`;
 
-		const lastFuckUp: NodeFuckUp = await this.#redis.lindex(key, -1);
+		const lastFuckUp: NodeFuckUp = await this.#redis.lindex(key, 0);
 		if (lastFuckUp.isEnded) return; // races <3
 		lastFuckUp.end = getDatabaseNow();
 		lastFuckUp.isEnded = true;
-		await this.#redis.lset<NodeFuckUp>(key, -1, lastFuckUp);
+		await this.#redis.lset<NodeFuckUp>(key, 0, lastFuckUp);
 	}
 
 	async getFuckUps(nodeName: string): Promise<NodeFuckUp[]> {
-		return this.#redis.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1);
+		return this.#redis.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1).reverse();
 	}
 }
