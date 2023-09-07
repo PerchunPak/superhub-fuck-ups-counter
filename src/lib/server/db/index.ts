@@ -51,6 +51,6 @@ export class Database {
 	}
 
 	async getFuckUps(nodeName: string): Promise<NodeFuckUp[]> {
-		return this.#redis.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1).reverse();
+		return (await this.#redis.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1)).reverse();
 	}
 }
