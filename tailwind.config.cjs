@@ -17,6 +17,9 @@ const config = {
 			}
 		}
 	},
+	daisyui: {
+		logs: false
+	},
 
 	plugins: [forms, typography, daisyui]
 };
