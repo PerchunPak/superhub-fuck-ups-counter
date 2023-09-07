@@ -1,6 +1,6 @@
 import type { InternalKumaData } from '$lib/server/parse-kuma/interfaces';
-// @ts-expect-error node packages work in runtime, idk what typescript wants
 import vm from 'vm';
+import UserAgent from 'user-agents';
 
 export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> {
 	const html = await getHtml();
@@ -11,10 +11,10 @@ export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> 
 }
 
 async function getHtml(): Promise<string> {
+	const userAgent = new UserAgent();
 	const response = await fetch('https://status.superhub.host/status/superhub', {
-		credentials: 'include',
 		headers: {
-			'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0',
+			'User-Agent': userAgent.toString(),
 			Accept:
 				'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 			'Accept-Language': 'en-US,en;q=0.5',
@@ -27,7 +27,6 @@ async function getHtml(): Promise<string> {
 			'Cache-Control': 'no-cache'
 		},
 		method: 'GET',
-		mode: 'cors'
 	});
 	return await response.text();
 }
