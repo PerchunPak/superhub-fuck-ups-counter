@@ -1,4 +1,4 @@
-import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
+import type { SuperhubNodes, SuperhubNode } from '$lib/server/fetch-data/interfaces';
 import type { Writable, Subscriber, Invalidator, Unsubscriber, Updater } from 'svelte/store';
 import { derived, writable } from 'svelte/store';
 import { calculateTotalDowntime } from '$lib/utils';
@@ -13,7 +13,7 @@ export const sortNodesBy = writable<
 >('uptime-percent');
 
 class NodesListClass implements Writable<SuperhubNodes | Error> {
-	#nodes;
+	readonly #nodes;
 	#sortedNodes;
 
 	constructor() {
@@ -21,9 +21,10 @@ class NodesListClass implements Writable<SuperhubNodes | Error> {
 		this.#sortedNodes = derived(
 			[this.#nodes, sortNodesBy],
 			([$nodes, $sortNodesBy]): SuperhubNodes => {
-				if ($nodes instanceof Error || $nodes.messages !== undefined || $sortNodesBy === undefined)
+				if ($nodes instanceof Error || 'messages' in $nodes || $sortNodesBy === undefined)
 					return [];
 
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				function compareTwoValues(a: any, b: any): -1 | 0 | 1 {
 					if (a < b) {
 						return -1;

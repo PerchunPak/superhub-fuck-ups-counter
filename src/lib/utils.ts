@@ -1,33 +1,32 @@
 import { formatDistance } from 'date-fns';
 import type { NodeFuckUp, SuperhubNodes } from '$lib/server/fetch-data/interfaces';
-import { locale as localeStore } from 'svelte-i18n';
-import { get } from 'svelte/store';
+// @ts-expect-error AFAIK date-fns doesn't mark it as public
 import { enUS, ru, uk } from 'date-fns/locale/index';
 
 export function firstCapital(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function getDateFnsLocale() {
-	const currentLocale = get(localeStore);
-	if (currentLocale === null || currentLocale === undefined)
+function getDateFnsLocale(locale: string | null | undefined) {
+	if (locale === null || locale === undefined)
 		throw new Error('Unexpected locale happened!');
 
-	if (currentLocale.startsWith('ru')) return ru;
-	else if (currentLocale.startsWith('uk')) return uk;
+	if (locale.startsWith('ru')) return ru;
+	else if (locale.startsWith('uk')) return uk;
 	else return enUS;
 }
 
 export function formatUnixTimestamp(
+	locale: string | null | undefined,
 	time: number,
 	formatting: 'amount of time' | 'from now' | 'from now with suffix'
 ): string {
 	if (formatting === 'amount of time') {
-		return formatDistance(0, time * 1000, { locale: getDateFnsLocale() });
+		return formatDistance(0, time * 1000, { locale: getDateFnsLocale(locale) });
 	} else if (formatting.startsWith('from now')) {
 		return formatDistance(new Date(time * 1000), new Date(), {
 			addSuffix: formatting.endsWith('with suffix'),
-			locale: getDateFnsLocale()
+			locale: getDateFnsLocale(locale)
 		});
 	} else {
 		throw TypeError('Incorrect formatting');

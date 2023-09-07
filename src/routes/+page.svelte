@@ -18,8 +18,8 @@
 				const fetchedNodes = await res.json();
 				fixDownNodesEndTime(fetchedNodes);
 				nodes.set(fetchedNodes);
-			} catch (e) {
-				nodes.set(e);
+			} catch (e: unknown) {
+				nodes.set(e as Error);
 			}
 		}
 		const interval = setInterval(updateNodes, 1000 * 60);
@@ -72,7 +72,7 @@
 	</p>
 </div>
 
-{#if $nodes.message !== undefined}
+{#if 'message' in $nodes}
 	<div class="pt-20 text-center">
 		<p class="text-2xl font-bold">{$_('error.title')}</p>
 		<p class="text-xl">
@@ -118,8 +118,8 @@
 					<p>
 						{$_('nodes.Total downtime is')}
 						<span class="font-bold"
-							>{($locale,
-							formatUnixTimestamp(calculateTotalDowntime(node.fuckUps), 'amount of time'))}</span
+							>{
+							formatUnixTimestamp($locale, calculateTotalDowntime(node.fuckUps), 'amount of time')}</span
 						>.
 					</p>
 
@@ -131,8 +131,8 @@
 						<p>
 							{$_('nodes.Last downtime was')}
 							<span class="font-bold"
-								>{($locale,
-								formatUnixTimestamp(node.fuckUps.slice(-1)[0].start, 'from now with suffix'))}</span
+								>{
+								formatUnixTimestamp($locale, node.fuckUps.slice(-1)[0].start, 'from now with suffix')}</span
 							>.
 						</p>
 					{/if}
@@ -140,7 +140,7 @@
 					<p>
 						{$_('nodes.Monitoring for')}
 						<span class="font-bold"
-							>{($locale, formatUnixTimestamp(node.monitoringSince, 'from now'))}</span
+							>{formatUnixTimestamp($locale, node.monitoringSince, 'from now')}</span
 						>.
 					</p>
 					<div

@@ -4,6 +4,7 @@
 </script>
 
 <div class="form-control w-full">
+	<!-- svelte-ignore a11y-label-has-associated-control -->
 	<label class="label">
 		<span class="label-text">{$_('sorting.Sort by')}</span>
 	</label>
