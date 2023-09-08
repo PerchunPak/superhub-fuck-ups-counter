@@ -26,7 +26,7 @@ async function getHtml(): Promise<string> {
 			Pragma: 'no-cache',
 			'Cache-Control': 'no-cache'
 		},
-		method: 'GET',
+		method: 'GET'
 	});
 	return await response.text();
 }

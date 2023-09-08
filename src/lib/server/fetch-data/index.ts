@@ -122,31 +122,79 @@ if (import.meta.vitest) {
 				calculateUptime(getDatabaseNow() - 3, [
 					{ start: getDatabaseNow(), end: getDatabaseNow() + 1, isEnded: true }
 				])
-			).toBe(66.67);  // it's actually 66.(6)
+			).toBe(66.67); // it's actually 66.(6)
 		});
 	});
 
 	describe('roundNumberToTwoPlacesAfterDot', () => {
-		it.each([0, 1, 2,3,4])('round 1.01%i to 1.01', (i) => {
-			expect(roundNumberToTwoPlacesAfterDot(1.01 + (i / 1000))).toBe(1.01);
+		it.each([0, 1, 2, 3, 4])('round 1.01%i to 1.01', (i) => {
+			expect(roundNumberToTwoPlacesAfterDot(1.01 + i / 1000)).toBe(1.01);
 		});
-		it.each([5,6,7,8,9])('round 1.01%i to 1.02', (i) => {
-			expect(roundNumberToTwoPlacesAfterDot(1.01 + (i / 1000))).toBe(1.02);
+		it.each([5, 6, 7, 8, 9])('round 1.01%i to 1.02', (i) => {
+			expect(roundNumberToTwoPlacesAfterDot(1.01 + i / 1000)).toBe(1.02);
 		});
-	})
+	});
 
 	describe('mergeKnownNodes', () => {
 		it('in fromDb and fromKuma', () => {
-			expect(mergeKnownNodes([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}, {name: 'c', foundAt: 1}], ['a', 'b', 'c'])).toStrictEqual([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}, {name: 'c', foundAt: 1}]);
+			expect(
+				mergeKnownNodes(
+					[
+						{ name: 'a', foundAt: 1 },
+						{ name: 'b', foundAt: 1 },
+						{ name: 'c', foundAt: 1 }
+					],
+					['a', 'b', 'c']
+				)
+			).toStrictEqual([
+				{ name: 'a', foundAt: 1 },
+				{ name: 'b', foundAt: 1 },
+				{ name: 'c', foundAt: 1 }
+			]);
 		});
 		it('in fromDb but not in fromKuma', () => {
-			expect(mergeKnownNodes([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}, {name: 'c', foundAt: 1}], ['a', 'b'])).toStrictEqual([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}]);
+			expect(
+				mergeKnownNodes(
+					[
+						{ name: 'a', foundAt: 1 },
+						{ name: 'b', foundAt: 1 },
+						{ name: 'c', foundAt: 1 }
+					],
+					['a', 'b']
+				)
+			).toStrictEqual([
+				{ name: 'a', foundAt: 1 },
+				{ name: 'b', foundAt: 1 }
+			]);
 		});
 		it('not in fromDb and fromKuma', () => {
-			expect(mergeKnownNodes([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}], ['a', 'b'])).toStrictEqual([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}]);
+			expect(
+				mergeKnownNodes(
+					[
+						{ name: 'a', foundAt: 1 },
+						{ name: 'b', foundAt: 1 }
+					],
+					['a', 'b']
+				)
+			).toStrictEqual([
+				{ name: 'a', foundAt: 1 },
+				{ name: 'b', foundAt: 1 }
+			]);
 		});
 		it('not in fromDb but in fromKuma', () => {
-			expect(mergeKnownNodes([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}], ['a', 'b', 'c'])).toStrictEqual([{name: 'a', foundAt: 1}, {name: 'b', foundAt: 1}, {name: 'c', foundAt: getDatabaseNow()}]);
+			expect(
+				mergeKnownNodes(
+					[
+						{ name: 'a', foundAt: 1 },
+						{ name: 'b', foundAt: 1 }
+					],
+					['a', 'b', 'c']
+				)
+			).toStrictEqual([
+				{ name: 'a', foundAt: 1 },
+				{ name: 'b', foundAt: 1 },
+				{ name: 'c', foundAt: getDatabaseNow() }
+			]);
 		});
-	})
+	});
 }

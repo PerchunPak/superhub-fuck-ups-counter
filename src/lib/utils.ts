@@ -8,8 +8,7 @@ export function firstCapital(str: string): string {
 }
 
 function getDateFnsLocale(locale: string | null | undefined) {
-	if (locale === null || locale === undefined)
-		throw new Error('Unexpected locale happened!');
+	if (locale === null || locale === undefined) throw new Error('Unexpected locale happened!');
 
 	if (locale.startsWith('ru')) return ru;
 	else if (locale.startsWith('uk')) return uk;

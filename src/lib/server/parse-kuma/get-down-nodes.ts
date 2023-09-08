@@ -16,7 +16,7 @@ export async function getDownNodes(nodes: InternalKumaNodeData[]): Promise<numbe
 			'Cache-Control': 'no-cache'
 		},
 		referrer: 'https://status.superhub.host/status/superhub',
-		method: 'GET',
+		method: 'GET'
 	});
 	const json = await result.json();
 
