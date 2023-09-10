@@ -11,6 +11,8 @@
 	import { locale } from 'svelte-i18n';
 	import { nodes } from '$lib/stores';
 	import { blur, slide } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	import { circInOut } from 'svelte/easing';
 
 	let ready = false;
 	onMount(() => {
@@ -113,8 +115,11 @@
 				<div class="hidden lg:block" />
 				<div class="hidden sm:block" />
 				<SelectSortBy />
-				{#each $nodes as node}
-					<div class="bg-secondary rounded-md px-4 py-5 w-full relative">
+				{#each $nodes as node (node.name)}
+					<div
+						class="bg-secondary rounded-md px-4 py-5 w-full relative"
+						animate:flip={{ duration: 500, easing: circInOut }}
+					>
 						<h3 class="font-extrabold">{firstCapital(node.name)}</h3>
 						<p>
 							{$_('nodes.Count of fuck-ups:')} <span class="font-bold">{node.fuckUps.length}</span>.
