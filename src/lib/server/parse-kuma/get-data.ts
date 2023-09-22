@@ -1,6 +1,6 @@
 import type { InternalKumaData } from '$lib/server/parse-kuma/interfaces';
 import vm from 'vm';
-import UserAgent from 'user-agents';
+import randUserAgent from "rand-user-agent";
 
 export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> {
 	const html = await getHtml();
@@ -11,7 +11,7 @@ export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> 
 }
 
 async function getHtml(): Promise<string> {
-	const userAgent = new UserAgent().toString();
+	const userAgent = randUserAgent("desktop");
 	const response = await fetch('https://status.superhub.host/status/superhub', {
 		headers: {
 			'User-Agent': userAgent,
@@ -30,7 +30,7 @@ async function getHtml(): Promise<string> {
 	});
 	const result = await response.text();
 	if (result.includes('<title>Just a moment...</title>'))
-		throw new Error('Cloudflare is blocking us; user agent is' + userAgent);
+		throw new Error('Cloudflare is blocking us; user agent is ' + userAgent);
 	return result;
 }
 
