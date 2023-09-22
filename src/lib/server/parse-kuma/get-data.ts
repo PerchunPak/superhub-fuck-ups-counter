@@ -11,10 +11,10 @@ export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> 
 }
 
 async function getHtml(): Promise<string> {
-	const userAgent = new UserAgent();
+	const userAgent = new UserAgent().toString();
 	const response = await fetch('https://status.superhub.host/status/superhub', {
 		headers: {
-			'User-Agent': userAgent.toString(),
+			'User-Agent': userAgent,
 			Accept:
 				'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 			'Accept-Language': 'en-US,en;q=0.5',
@@ -28,7 +28,9 @@ async function getHtml(): Promise<string> {
 		},
 		method: 'GET'
 	});
-	return await response.text();
+	const result = await response.text();
+	if (result.includes('<title>Just a moment...</title>')) throw new Error('Cloudflare is blocking us; user agent is' + userAgent);
+	return result;
 }
 
 function extractCodeFromHtml(html: string): string {
