@@ -29,7 +29,8 @@ async function getHtml(): Promise<string> {
 		method: 'GET'
 	});
 	const result = await response.text();
-	if (result.includes('<title>Just a moment...</title>')) throw new Error('Cloudflare is blocking us; user agent is' + userAgent);
+	if (result.includes('<title>Just a moment...</title>'))
+		throw new Error('Cloudflare is blocking us; user agent is' + userAgent);
 	return result;
 }
 

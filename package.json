@@ -13,6 +13,7 @@
 		"test": "vitest --coverage"
 	},
 	"devDependencies": {
+		"@sentry/sveltekit": "^7.70.0",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/vite-plugin-svelte": "^2.4.3",
