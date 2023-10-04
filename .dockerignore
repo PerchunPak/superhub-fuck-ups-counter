@@ -1,0 +1,6 @@
+.sentryclirc
+node_modules
+.svelte-kit
+build
+.idea
+.env
