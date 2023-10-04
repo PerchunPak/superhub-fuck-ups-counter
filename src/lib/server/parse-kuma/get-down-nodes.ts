@@ -1,8 +1,8 @@
 import type { InternalKumaNodeData } from '$lib/server/parse-kuma/interfaces';
-import randUserAgent from "rand-user-agent";
+import randUserAgent from 'rand-user-agent';
 
 export async function getDownNodes(nodes: InternalKumaNodeData[]): Promise<number[]> {
-	const userAgent = randUserAgent("desktop");
+	const userAgent = randUserAgent('desktop');
 	const result = await fetch('https://status.superhub.host/api/status-page/heartbeat/superhub', {
 		headers: {
 			'User-Agent': userAgent,

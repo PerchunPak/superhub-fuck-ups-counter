@@ -1,6 +1,6 @@
 import type { InternalKumaData } from '$lib/server/parse-kuma/interfaces';
 import vm from 'vm';
-import randUserAgent from "rand-user-agent";
+import randUserAgent from 'rand-user-agent';
 
 export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> {
 	const html = await getHtml();
@@ -11,7 +11,7 @@ export async function getInternalSuperhubNodesData(): Promise<InternalKumaData> 
 }
 
 async function getHtml(): Promise<string> {
-	const userAgent = randUserAgent("desktop");
+	const userAgent = randUserAgent('desktop');
 	const response = await fetch('https://status.superhub.host/status/superhub', {
 		headers: {
 			'User-Agent': userAgent,
