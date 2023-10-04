@@ -1,4 +1,5 @@
 ARG ORIGIN="http://localhost:3000"
+ARG SENTRY_AUTH_TOKEN
 ARG REDIS_URL
 ARG REDIS_TOKEN
 
@@ -13,6 +14,7 @@ RUN corepack enable
 
 FROM base AS build
 
+ARG SENTRY_AUTH_TOKEN
 ARG REDIS_URL
 ARG REDIS_TOKEN
 
@@ -22,6 +24,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 
 ENV ORIGIN=${ORIGIN}
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 ENV REDIS_URL=${REDIS_URL}
 ENV REDIS_TOKEN=${REDIS_TOKEN}
 

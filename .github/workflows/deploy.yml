@@ -83,6 +83,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             ORIGIN=https://superhub.perchun.it
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             REDIS_URL=${{ secrets.REDIS_URL }}
             REDIS_TOKEN=${{ secrets.REDIS_TOKEN }}
           cache-from: type=gha
