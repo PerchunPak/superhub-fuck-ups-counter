@@ -13,7 +13,8 @@
 		"test": "vitest --coverage"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-node": "^1.3.1",
+		"@sentry/sveltekit": "^7.70.0",
+		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/vite-plugin-svelte": "^2.4.3",
 		"@tailwindcss/forms": "^0.5.3",
@@ -33,6 +34,7 @@
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
+		"rand-user-agent": "^2.0.31",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
 		"svelte-i18n": "^3.7.0",
@@ -42,9 +44,5 @@
 		"vite": "^4.4.2",
 		"vitest": "^0.34.1"
 	},
-	"type": "module",
-	"dependencies": {
-		"@sentry/sveltekit": "^7.73.0",
-		"rand-user-agent": "^2.0.31"
-	}
+	"type": "module"
 }
