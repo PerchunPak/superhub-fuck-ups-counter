@@ -4,9 +4,9 @@ import { getDownNodes } from '$lib/server/parse-kuma/get-down-nodes';
 
 export async function fetchKumaNodesData(): Promise<FetchedKumaData> {
 	const internalData = await getInternalSuperhubNodesData();
-	const downNodes = await getDownNodes(internalData.publicGroupList[1].monitorList);
+	const downNodes = await getDownNodes(internalData.publicGroupList[0].monitorList);
 
-	return internalData.publicGroupList[1].monitorList.map((node) => ({
+	return internalData.publicGroupList[0].monitorList.map((node) => ({
 		id: node.id,
 		// @ts-expect-error it can't be null
 		name: node.name.match(/(^\w+)/)[1],

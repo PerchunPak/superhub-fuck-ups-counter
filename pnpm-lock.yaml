@@ -68,9 +68,6 @@ devDependencies:
   prettier-plugin-svelte:
     specifier: ^2.10.1
     version: 2.10.1(prettier@2.8.8)(svelte@4.1.1)
-  rand-user-agent:
-    specifier: ^2.0.31
-    version: 2.0.31
   svelte:
     specifier: ^4.0.5
     version: 4.1.1
@@ -2909,11 +2906,6 @@ packages:
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
-    dev: true
-
-  /rand-user-agent@2.0.31:
-    resolution: {integrity: sha512-K0AGFHvhvB/XeDSxC7FYZ3TTcS0qqF7L3qaodW+V+nZAVWf0x/amuZEJYQkfiR5H9wJ+wfiC+heaLrfknzJ9zw==}
-    engines: {node: '>=14.16'}
     dev: true
 
   /react-is@18.2.0:

@@ -34,7 +34,6 @@
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
-		"rand-user-agent": "^2.0.31",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
 		"svelte-i18n": "^3.7.0",
