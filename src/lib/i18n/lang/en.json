@@ -24,5 +24,6 @@
 		"Total downtime": "Total downtime",
 		"Last downtime": "Last downtime",
 		"First noticed": "First noticed"
-	}
+	},
+	"warningText": "WARNING: Currently, this status page shows uptime lower than actual."
 }

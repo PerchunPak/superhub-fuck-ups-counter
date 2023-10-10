@@ -173,6 +173,12 @@
 	{/if}
 {/if}
 
+<div
+	class="alert alert-warning flex sticky bottom-8 lg:bottom-12 xl:bottom-14 lg:w-2/3 xl:w-1/3"
+>
+	<p>{$_('warningText')}</p>
+</div>
+
 <style lang="postcss">
 	.uptime-good {
 		@apply bg-[var(--color-bg-uptime-good)] border-[var(--color-border-uptime-good)];
