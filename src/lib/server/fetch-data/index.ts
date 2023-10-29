@@ -35,8 +35,7 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 
 		resultNodes.push({
 			name: node.name,
-			// @ts-expect-error no way `fuckUps` would be empty
-			isDown: !fuckUps.at(-1).isEnded,
+			isDown: !fuckUps.at(-1)?.isEnded || false,
 			uptime: calculateUptime(monitoringSince, fuckUps),
 			monitoringSince: monitoringSince,
 			fuckUps: fuckUps
