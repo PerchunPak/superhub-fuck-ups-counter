@@ -35,7 +35,7 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 
 		resultNodes.push({
 			name: node.name,
-			isDown: !fuckUps.at(-1)?.isEnded || false,
+			isDown: !(fuckUps.at(-1)?.isEnded) || false,
 			uptime: calculateUptime(monitoringSince, fuckUps),
 			monitoringSince: monitoringSince,
 			fuckUps: fuckUps
