@@ -8,11 +8,11 @@ import type { PingInformation } from '$lib/server/parse-kuma/interfaces';
 
 export async function getNodesData(): Promise<SuperhubNodes> {
 	const db = new Database();
-	const cachedResponse = await db.getResponseFromCache();
-
-	if (cachedResponse !== null) {
-		return cachedResponse;
-	}
+	// const cachedResponse = await db.getResponseFromCache();
+	//
+	// if (cachedResponse !== null) {
+	// 	return cachedResponse;
+	// }
 
 	const response = await fetchNewResponse(db);
 	await db.saveResponseToCache(response);
@@ -35,7 +35,8 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 
 		resultNodes.push({
 			name: node.name,
-			isDown: !(fuckUps.at(-1)?.isEnded) || false,
+			// @ts-expect-error i did the check
+			isDown: fuckUps.at(-1) === undefined ? false : !fuckUps.at(-1).isEnded,
 			uptime: calculateUptime(monitoringSince, fuckUps),
 			monitoringSince: monitoringSince,
 			fuckUps: fuckUps
