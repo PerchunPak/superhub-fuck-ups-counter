@@ -1,8 +1,14 @@
-export type FetchedKumaData = {
+export interface PingInformation {
+	isOnline: boolean;
+	time: number;
+}
+
+export interface FetchedKumaNode {
 	id: number;
 	name: string;
-	isDown: boolean;
-}[];
+	pings: PingInformation[];
+}
+export type FetchedKumaData = FetchedKumaNode[];
 
 export interface InternalKumaNodeData {
 	id: number;

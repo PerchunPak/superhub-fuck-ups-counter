@@ -3,7 +3,6 @@ import type { SuperhubNodes } from '$lib/server/fetch-data/interfaces';
 import { Redis } from '@upstash/redis';
 import { REDIS_URL, REDIS_TOKEN } from '$env/static/private';
 import type { KnownNode } from '$lib/server/db/interfaces';
-import { getDatabaseNow } from '$lib/utils';
 
 const SEVEN_DAYS = 604800;
 
@@ -32,25 +31,34 @@ export class Database {
 		await this.#redis.set('knownNodes', knownNodes, { ex: SEVEN_DAYS });
 	}
 
-	async fuckUpStart(nodeName: string): Promise<void> {
+	async getFuckUps(nodeName: string): Promise<NodeFuckUp[]> {
+		return (await this.#redis.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1)).reverse();
+	}
+
+	async getLastParsedPingTime(nodeName: string): Promise<number> {
+		const result = await this.#redis.get<number>(`node:${nodeName}:lastParsedPingTime`);
+		if (result === null) return 0;
+		return result;
+	}
+
+	async setLastParsedPingTime(nodeName: string, lastParsedPingTime: number): Promise<void> {
+		await this.#redis.set(`node:${nodeName}:lastParsedPingTime`, lastParsedPingTime);
+	}
+
+	async addFuckUp(nodeName: string, start: number, end: number | null): Promise<void> {
 		const key = `node:${nodeName}:fuckUps`;
 
 		const lastFuckUp: NodeFuckUp | null = await this.#redis.lindex(key, 0);
-		if (lastFuckUp !== null && !lastFuckUp.isEnded) return;
-		await this.#redis.lpush<NodeFuckUp>(key, { start: getDatabaseNow(), end: 0, isEnded: false });
-	}
 
-	async fuckUpStop(nodeName: string): Promise<void> {
-		const key = `node:${nodeName}:fuckUps`;
+		let previousFuckUp: NodeFuckUp | null;
+		if (lastFuckUp !== null && !lastFuckUp.isEnded)
+			previousFuckUp = await this.#redis.lpop<NodeFuckUp>(key);
+		else previousFuckUp = null;
 
-		const lastFuckUp: NodeFuckUp = await this.#redis.lindex(key, 0);
-		if (lastFuckUp.isEnded) return; // races <3
-		lastFuckUp.end = getDatabaseNow();
-		lastFuckUp.isEnded = true;
-		await this.#redis.lset<NodeFuckUp>(key, 0, lastFuckUp);
-	}
-
-	async getFuckUps(nodeName: string): Promise<NodeFuckUp[]> {
-		return (await this.#redis.lrange<NodeFuckUp>(`node:${nodeName}:fuckUps`, 0, -1)).reverse();
+		await this.#redis.lpush<NodeFuckUp>(key, {
+			start: previousFuckUp === null ? start : previousFuckUp.start,
+			end: previousFuckUp === null ? (end === null ? 0 : end) : previousFuckUp.end,
+			isEnded: end === null
+		});
 	}
 }

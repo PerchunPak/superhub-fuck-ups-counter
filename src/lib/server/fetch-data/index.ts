@@ -4,6 +4,7 @@ import { fetchKumaNodesData } from '$lib/server/parse-kuma';
 import type { NodeFuckUp } from '$lib/server/fetch-data/interfaces';
 import { calculateTotalDowntime, getDatabaseNow } from '$lib/utils';
 import type { KnownNode } from '$lib/server/db/interfaces';
+import type { PingInformation } from '$lib/server/parse-kuma/interfaces';
 
 export async function getNodesData(): Promise<SuperhubNodes> {
 	const db = new Database();
@@ -28,25 +29,70 @@ async function fetchNewResponse(db: Database): Promise<SuperhubNodes> {
 
 	const resultNodes: SuperhubNodes = [];
 	for (const node of fromKuma) {
-		if (node.isDown) {
-			await db.fuckUpStart(node.name);
-		}
-
+		await addFuckUpsToDatabase(db, node.name, node.pings);
 		const fuckUps = await db.getFuckUps(node.name);
-		if (!node.isDown && fuckUps.length > 0 && !fuckUps.slice(-1)[0].isEnded) {
-			await db.fuckUpStop(node.name);
-		}
 		const monitoringSince = knownNodes.filter((e) => e.name === node.name)[0].foundAt;
 
 		resultNodes.push({
 			name: node.name,
-			isDown: node.isDown,
+			// @ts-expect-error no way `fuckUps` would be empty
+			isDown: !fuckUps.at(-1).isEnded,
 			uptime: calculateUptime(monitoringSince, fuckUps),
 			monitoringSince: monitoringSince,
 			fuckUps: fuckUps
 		});
 	}
 	return resultNodes;
+}
+
+async function addFuckUpsToDatabase(db: Database, nodeName: string, pings: PingInformation[]) {
+	const lastParsedPingTime = await db.getLastParsedPingTime(nodeName);
+	let lastSuccessfulPingTime: number | undefined;
+	let fuckUpStart: PingInformation | null = null;
+	for (const ping of extractOnlyStewedPings(lastParsedPingTime, pings)) {
+		if (ping.isOnline) {
+			if (fuckUpStart !== null) {
+				await db.addFuckUp(nodeName, fuckUpStart.time, ping.time);
+				fuckUpStart = null;
+			}
+			lastSuccessfulPingTime = ping.time;
+		} else {
+			if (fuckUpStart === null) {
+				fuckUpStart = ping;
+			}
+		}
+	}
+
+	if (fuckUpStart !== null) await db.addFuckUp(nodeName, fuckUpStart.time, null);
+	if (lastSuccessfulPingTime !== undefined)
+		await db.setLastParsedPingTime(nodeName, lastSuccessfulPingTime);
+}
+
+function extractOnlyStewedPings(
+	lastParsedPingTime: number,
+	pings: PingInformation[]
+): PingInformation[] {
+	const stewedPings: PingInformation[] = [];
+
+	let counter = 0;
+	// @ts-expect-error so if check would work
+	let firstPing: PingInformation = { isOnline: undefined, time: undefined };
+	for (const ping of pings) {
+		if (lastParsedPingTime > ping.time) continue;
+
+		if (ping.isOnline === firstPing.isOnline) counter += 1;
+		else {
+			firstPing = ping;
+			counter = 1;
+		}
+
+		if (counter === 3) {
+			stewedPings.push(firstPing);
+			counter = 0;
+		}
+	}
+
+	return stewedPings;
 }
 
 function calculateUptime(monitoringSince: number, fuckUps: NodeFuckUp[]): number {
@@ -87,6 +133,72 @@ function mergeKnownNodes(fromDb: KnownNode[], fromKuma: string[]): KnownNode[] {
 
 if (import.meta.vitest) {
 	const { it, expect, describe } = import.meta.vitest;
+
+	describe('extract only stewed pings', () => {
+		it('no pings to parse', () => {
+			expect(
+				extractOnlyStewedPings(0, [
+					{ isOnline: true, time: 1 },
+					{ isOnline: true, time: 2 },
+					{ isOnline: false, time: 3 },
+					{ isOnline: false, time: 4 }
+				])
+			).toStrictEqual([]);
+		});
+
+		it('new fuck up, no end', () => {
+			expect(
+				extractOnlyStewedPings(0, [
+					{ isOnline: true, time: 1 },
+					{ isOnline: false, time: 2 },
+					{ isOnline: false, time: 3 },
+					{ isOnline: false, time: 4 }
+				])
+			).toStrictEqual([{ isOnline: false, time: 2 }]);
+		});
+
+		it('new fuck up, throttle ping 1', () => {
+			expect(
+				extractOnlyStewedPings(0, [
+					{ isOnline: true, time: 1 },
+					{ isOnline: false, time: 2 },
+					{ isOnline: false, time: 3 },
+					{ isOnline: false, time: 4 },
+					{ isOnline: true, time: 5 }
+				])
+			).toStrictEqual([{ isOnline: false, time: 2 }]);
+		});
+
+		it('new fuck up, throttle ping 2', () => {
+			expect(
+				extractOnlyStewedPings(0, [
+					{ isOnline: true, time: 1 },
+					{ isOnline: false, time: 2 },
+					{ isOnline: false, time: 3 },
+					{ isOnline: false, time: 4 },
+					{ isOnline: true, time: 5 },
+					{ isOnline: false, time: 6 }
+				])
+			).toStrictEqual([{ isOnline: false, time: 2 }]);
+		});
+
+		it('new fuck up with end', () => {
+			expect(
+				extractOnlyStewedPings(0, [
+					{ isOnline: true, time: 1 },
+					{ isOnline: false, time: 2 },
+					{ isOnline: false, time: 3 },
+					{ isOnline: false, time: 4 },
+					{ isOnline: true, time: 5 },
+					{ isOnline: true, time: 6 },
+					{ isOnline: true, time: 7 }
+				])
+			).toStrictEqual([
+				{ isOnline: false, time: 2 },
+				{ isOnline: true, time: 5 }
+			]);
+		});
+	});
 
 	describe('calculate uptime', () => {
 		it('no fuck-ups', () => {

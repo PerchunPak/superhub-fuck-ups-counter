@@ -1,15 +1,15 @@
 import type { FetchedKumaData } from '$lib/server/parse-kuma/interfaces';
 import { getInternalSuperhubNodesData } from '$lib/server/parse-kuma/get-data';
-import { getDownNodes } from '$lib/server/parse-kuma/get-down-nodes';
+import { getPingsInformation } from '$lib/server/parse-kuma/get-pings-information';
 
 export async function fetchKumaNodesData(): Promise<FetchedKumaData> {
 	const internalData = await getInternalSuperhubNodesData();
-	const downNodes = await getDownNodes(internalData.publicGroupList[0].monitorList);
+	const pingsInformation = await getPingsInformation(internalData.publicGroupList[0].monitorList);
 
 	return internalData.publicGroupList[0].monitorList.map((node) => ({
 		id: node.id,
 		// @ts-expect-error it can't be null
 		name: node.name.match(/(^\w+)/)[1],
-		isDown: downNodes.includes(node.id)
+		pings: pingsInformation[node.id]
 	}));
 }
