@@ -8,11 +8,11 @@ import type { PingInformation } from '$lib/server/parse-kuma/interfaces';
 
 export async function getNodesData(): Promise<SuperhubNodes> {
 	const db = new Database();
-	// const cachedResponse = await db.getResponseFromCache();
-	//
-	// if (cachedResponse !== null) {
-	// 	return cachedResponse;
-	// }
+	const cachedResponse = await db.getResponseFromCache();
+	
+	if (cachedResponse !== null) {
+		return cachedResponse;
+	}
 
 	const response = await fetchNewResponse(db);
 	await db.saveResponseToCache(response);
